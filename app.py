@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import re
 import base64
 import json
@@ -17,9 +17,10 @@ import operator
 
 app = Flask(__name__)
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
-github_tokens = ["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",
-                 "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"]
+github_tokens = ["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", "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",
+                 "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", "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"]
 ptr = 0
 github_token = github_tokens[ptr]
 MOD = 10007
@@ -157,6 +158,7 @@ def extract_words(user, repo, text, k):
 
 # find collaborators route
 @app.route("/repos/<username>/<repo>", methods=['GET', 'POST'])
+@cross_origin()
 def find_collaborators(username, repo):
 
     get_filenames(username, repo)
@@ -250,6 +252,7 @@ def find_collaborators(username, repo):
 
 # find repos route
 @app.route("/users/<username>", methods=['GET', 'POST'])
+@cross_origin()
 def find_repos(username):
 
     req = requests.get("http://api.github.com/users/"+username+"/repos")
